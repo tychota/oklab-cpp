@@ -82,7 +82,7 @@ int main() {
     RGB color1 = { 255, 0, 0 }; // Red
     RGB color2 = { 0, 0, 255 }; // Blue
 
-    double t = 0.5;
+    float t = 0.5;
     RGB result = interpolateColor(color1, color2, t);
 
     std::cout << "Interpolated Color: ("

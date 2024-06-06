@@ -8,7 +8,7 @@ TEST(ColorTest, GamutMapping)
     RGB color1 = {255, 0, 0}; // Red
     RGB color2 = {0, 0, 255}; // Blue
 
-    double t = 0.5;
+    float t = 0.5;
     RGB result = interpolateColor(color1, color2, t);
 
     EXPECT_GE(result[0], 0);
@@ -24,7 +24,7 @@ TEST(ColorTest, NegativeInterpolation)
     RGB color1 = {255, 0, 0}; // Red
     RGB color2 = {0, 0, 255}; // Blue
 
-    double t = -0.5;
+    float t = -0.5;
     RGB result = interpolateColor(color1, color2, t);
 
     // Ensure the result is clamped to valid RGB values
