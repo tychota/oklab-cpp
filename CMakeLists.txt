@@ -2,18 +2,23 @@ cmake_minimum_required(VERSION 3.29.3)
 project(oklab CXX)
 
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -pg")
-add_library(Oklab src/Oklab.cpp src/MatrixOperations.cpp)
+# Compiler flags
+set(CMAKE_CXX_FLAGS_DEBUG "-g -Og")
+set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG")
 
-add_executable(oklabMain src/main.cpp)
-target_link_libraries(oklabMain Oklab)
+# Include directories for the entire project
+include_directories(${PROJECT_SOURCE_DIR}/include)
 
-find_package(GTest REQUIRED)
-enable_testing()
-add_executable(oklabTests tests/OklabTests.cpp)
-target_link_libraries(oklabTests Oklab gtest::gtest)
+# Mapping algorithm selection
+set(MAPPING_ALGORITHM "CSS4" CACHE STRING "Choose the mapping algorithm: CSS4, CLAMP")
+set_property(CACHE MAPPING_ALGORITHM PROPERTY STRINGS "CSS4" "CLAMP")
 
-find_package(benchmark REQUIRED)
-add_executable(oklabBenchmark benchmarks/OklabBenchmark.cpp)
-target_link_libraries(oklabBenchmark Oklab benchmark::benchmark_main)
+# Add subdirectories
+add_subdirectory(src)
+add_subdirectory(tests)
+add_subdirectory(benchmarks)
+add_subdirectory(examples)
+
+enable_testing()  # Enables integration of test frameworks

@@ -1,30 +1,55 @@
-#include <benchmark/benchmark.h>
-#include "../src/Oklab.h"
+#include "benchmark/cppbenchmark.h"
 
-static void BM_InterpolateColor(benchmark::State &state)
+#include "ColorConversions.h"
+#include "../src/OkLxx.h"
+
+#include <random>
+#include <chrono>
+
+using namespace oklab;
+
+const auto settings = CppBenchmark::Settings().Latency(1, 1000000000, 5);
+
+// BENCHMARK("RGB to Oklab", settings)
+// {
+//     RGB rgb = RGB{rand() % 256, rand() % 256, rand() % 256};
+
+//     auto start = std::chrono::high_resolution_clock::now();
+
+//     Oklab oklab = rgbToOklab(rgb);
+
+//     auto stop = std::chrono::high_resolution_clock::now();
+
+//     // Register latency metrics
+//     uint64_t latency = std::chrono::duration_cast<std::chrono::nanoseconds>(stop - start).count();
+//     if (latency > 0)
+//     {
+//         context.metrics().AddLatency(latency);
+//     }
+// }
+
+BENCHMARK("P3 to RGB", settings)
 {
-    RGB color1 = {255, 0, 0}; // Red
-    RGB color2 = {0, 0, 255}; // Blue
-    float t = 0.5;
-    for (auto _ : state)
+    static auto A = std::chrono::high_resolution_clock::now();
+    static auto B = std::chrono::high_resolution_clock::now();
+    uint64_t resolution = std::chrono::duration_cast<std::chrono::nanoseconds>(B - A).count();
+
+    // P3 p3 = P3{rand() % 256, rand() % 256, rand() % 256};
+
+    P3 p3 = P3{128, 128, 128};
+
+    auto start = std::chrono::high_resolution_clock::now();
+
+    RGB result = p3ToRgb(p3);
+
+    auto stop = std::chrono::high_resolution_clock::now();
+
+    // Register latency metrics
+    uint64_t latency = std::chrono::duration_cast<std::chrono::nanoseconds>(stop - start - (B - A)).count();
+    if (latency > 0)
     {
-        RGB result = interpolateColor(color1, color2, t);
-        benchmark::DoNotOptimize(result);
+        context.metrics().AddLatency(latency);
     }
 }
-BENCHMARK(BM_InterpolateColor);
 
-static void BM_InterpolateRandomColors(benchmark::State &state)
-{
-    for (auto _ : state)
-    {
-        RGB color1 = {rand() % 256, rand() % 256, rand() % 256};
-        RGB color2 = {rand() % 256, rand() % 256, rand() % 256};
-        float t = static_cast<float>(rand()) / RAND_MAX;
-        RGB result = interpolateColor(color1, color2, t);
-        benchmark::DoNotOptimize(result);
-    }
-}
-BENCHMARK(BM_InterpolateRandomColors);
-
-BENCHMARK_MAIN();
+BENCHMARK_MAIN()

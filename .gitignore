@@ -1,3 +1,12 @@
+# Test or not stable data
+/*.csv
+/stats*.py
+/stats*.results
+/ghidriffs/
+/*.hdr
+/*.numbers
+
+
 # Conan specific
 **/test_package/build/
 **/test_package/build-*/
@@ -8,6 +17,7 @@ conanbuildinfo.txt
 conaninfo.txt
 graph_info.json
 build/
+build_*/
 
 # CMake
 CMakeUserPresets.json
@@ -139,3 +149,4 @@ venv.bak/
 Session.vim
 *~
 .undodir
+

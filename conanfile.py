@@ -21,8 +21,10 @@ class OklabRecipe(ConanFile):
     exports_sources = "CMakeLists.txt", "src/*", "tests/*", "benchmarks/*"
 
     def requirements(self):
+        self.requires("taywee-args/6.4.6")
         self.requires("gtest/1.14.0")
-        self.requires("benchmark/1.8.4")
+        # self.requires("benchmark/1.8.4")
+        self.requires("cppbenchmark/cci.20201029")
 
     def layout(self):
         cmake_layout(self)
