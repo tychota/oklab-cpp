@@ -2,7 +2,6 @@
 #include <cmath>
 
 #include "ColorTypes.h"
-#include "ColorUtils.h"
 
 /**
  * @file ColorUtils.h
@@ -21,19 +20,7 @@ namespace oklab
      * @param value The gamma-encoded value, typically in the range [0, 1].
      * @return The linearized value.
      */
-    inline double gammaToLinear(double value)
-    {
-        double absValue = std::abs(value);
-
-        if (absValue <= 0.04045)
-        {
-            return value / 12.92;
-        }
-        else
-        {
-            return std::copysign(std::pow((absValue + 0.055) / 1.055, 2.4), value);
-        }
-    }
+    double gammaToLinear(double value);
 
     /**
      * @brief Converts a linear light value to a gamma-encoded value.
@@ -46,19 +33,7 @@ namespace oklab
      * @param value The linear light value, typically in the range [0, 1].
      * @return The gamma-encoded value.
      */
-    inline double linearToGamma(double value)
-    {
-        double absValue = std::abs(value);
-
-        if (absValue <= 0.0031308)
-        {
-            return 12.92 * value;
-        }
-        else
-        {
-            return std::copysign(1.055 * std::pow(absValue, 1.0 / 2.4) - 0.055, value);
-        }
-    }
+    double linearToGamma(double value);
 
     /**
      * @brief Clip a color to its gamut.

@@ -26,22 +26,16 @@ namespace oklab
     {
         if (std::isnan(oklch[2]))
         {
-            double l = oklch[0];
-            double a = 0;
-            double b = 0;
-
-            return {l, a, b};
+            return Oklab{oklch[0], 0, 0};
         }
         else
         {
-            double hue = constrainAngle(oklch[2]);
-            double angle = hue * PI / 180.0;
+            double angle = constrainAngle(oklch[2]) * PI / 180.0;
 
-            double l = oklch[0];
-            double a = std::cos(angle) * oklch[1];
-            double b = std::sin(angle) * oklch[1];
-
-            return {l, a, b};
+            return Oklab{
+                oklch[0],
+                std::cos(angle) * oklch[1],
+                std::sin(angle) * oklch[1]};
         }
     }
 
@@ -50,16 +44,14 @@ namespace oklab
         double epsilon = 0.0002;
         if (std::abs(oklab[1]) < epsilon && std::abs(oklab[2]) < epsilon)
         {
-            double l = oklab[0];
-            return {l, 0, NAN};
+            return Oklch{oklab[0], 0, NAN};
         }
         else
         {
-            double l = oklab[0];
-            double c = std::sqrt(oklab[1] * oklab[1] + oklab[2] * oklab[2]);
-            double hue = std::atan2(oklab[2], oklab[1]) * 180.0 / PI;
-            double h = constrainAngle(hue);
-            return {l, c, h};
+            return Oklch{
+                oklab[0],
+                std::sqrt(oklab[1] * oklab[1] + oklab[2] * oklab[2]),
+                constrainAngle(std::atan2(oklab[2], oklab[1]) * 180.0 / PI)};
         }
     }
 
@@ -89,6 +81,7 @@ namespace oklab
 
         double deltaL = l1 - l2;
         // TODO: 2 is debated here: https://github.com/w3c/csswg-drafts/pull/10063
+        // However, reference implementation use 1 so we do too.
         const double FACTOR = 1;
         double deltaA = FACTOR * (a1 - a2);
         double deltaB = FACTOR * (b1 - b2);

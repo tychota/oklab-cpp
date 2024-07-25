@@ -44,25 +44,23 @@ namespace oklab
             std::clamp(linearRgb[2], 0.0, 1.0)};
     };
 
-    inline LinearSRGB rgbToLinearRgb(const RGB &rgb)
+    LinearSRGB rgbToLinearRgb(const RGB &rgb)
     {
-        double r = gammaToLinear(rgb[0] / 255.0);
-        double g = gammaToLinear(rgb[1] / 255.0);
-        double b = gammaToLinear(rgb[2] / 255.0);
-
-        return {r, g, b};
+        return LinearSRGB{
+            gammaToLinear(rgb[0] / 255.0),
+            gammaToLinear(rgb[1] / 255.0),
+            gammaToLinear(rgb[2] / 255.0)};
     }
 
-    inline RGB linearRgbToRgb(const LinearSRGB &linearRgb)
+    RGB linearRgbToRgb(const LinearSRGB &linearRgb)
     {
-        int r = static_cast<int>(std::round(linearToGamma(linearRgb[0]) * 255.0));
-        int g = static_cast<int>(std::round(linearToGamma(linearRgb[1]) * 255.0));
-        int b = static_cast<int>(std::round(linearToGamma(linearRgb[2]) * 255.0));
-
-        return RGB{r, g, b};
+        return RGB{
+            static_cast<int>(std::round(linearToGamma(linearRgb[0]) * 255.0)),
+            static_cast<int>(std::round(linearToGamma(linearRgb[1]) * 255.0)),
+            static_cast<int>(std::round(linearToGamma(linearRgb[2]) * 255.0))};
     }
 
-    inline Oklab linearRgbToOklab(const LinearSRGB &linearRgb)
+    Oklab linearRgbToOklab(const LinearSRGB &linearRgb)
     {
         LMS lms = multiplyMatrix(RGB_TO_LMS, linearRgb);
         Oklab oklab = lmsToOklab(lms);
@@ -71,14 +69,12 @@ namespace oklab
 
     Oklab rgbToOklab(const RGB &rgb)
     {
-        double r = gammaToLinear(rgb[0] / 255.0);
-        double g = gammaToLinear(rgb[1] / 255.0);
-        double b = gammaToLinear(rgb[2] / 255.0);
-
-        return linearRgbToOklab({r, g, b});
+        return linearRgbToOklab({gammaToLinear(rgb[0] / 255.0),
+                                 gammaToLinear(rgb[1] / 255.0),
+                                 gammaToLinear(rgb[2] / 255.0)});
     }
 
-    inline LinearSRGB oklabToLinearRgb(const Oklab &oklab)
+    LinearSRGB oklabToLinearRgb(const Oklab &oklab)
     {
         LMS lms = oklabToLms(oklab);
         LinearSRGB rgb = multiplyMatrix(LMS_TO_RGB, lms);
@@ -120,7 +116,8 @@ namespace oklab
         LinearSRGB clippedLinearRgb = clipToGamut<LinearSRGB>(linearRgb);
         return linearColorToColor<LinearSRGB, RGB>(clippedLinearRgb);
 #else
-        return performCssGamutMapping<RGB, LinearSRGB>(oklab);
+        LinearSRGB linearRgb = oklabToLinearRgb(oklab);
+        return linearColorToColor<LinearSRGB, RGB>(linearRgb);
 #endif
     }
 }

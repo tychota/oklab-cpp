@@ -42,25 +42,23 @@ namespace oklab
             std::clamp(linearP3[2], 0.0, 1.0)};
     };
 
-    inline LinearP3 p3ToLinearP3(const P3 &p3)
+    LinearP3 p3ToLinearP3(const P3 &p3)
     {
-        double r = gammaToLinear(p3[0] / 255.0);
-        double g = gammaToLinear(p3[1] / 255.0);
-        double b = gammaToLinear(p3[2] / 255.0);
-
-        return {r, g, b};
+        return LinearP3{
+            gammaToLinear(p3[0] / 255.0),
+            gammaToLinear(p3[1] / 255.0),
+            gammaToLinear(p3[2] / 255.0)};
     }
 
-    inline P3 linearP3ToP3(const LinearP3 &linearP3)
+    P3 linearP3ToP3(const LinearP3 &linearP3)
     {
-        int r = static_cast<int>(std::round(linearToGamma(linearP3[0]) * 255.0));
-        int g = static_cast<int>(std::round(linearToGamma(linearP3[1]) * 255.0));
-        int b = static_cast<int>(std::round(linearToGamma(linearP3[2]) * 255.0));
-
-        return P3{r, g, b};
+        return P3{
+            static_cast<int>(std::round(linearToGamma(linearP3[0]) * 255.0)),
+            static_cast<int>(std::round(linearToGamma(linearP3[1]) * 255.0)),
+            static_cast<int>(std::round(linearToGamma(linearP3[2]) * 255.0))};
     }
 
-    inline Oklab linearP3ToOklab(const LinearP3 &linearP3)
+    Oklab linearP3ToOklab(const LinearP3 &linearP3)
     {
         LMS lms = multiplyMatrix(P3_TO_LMS, linearP3);
         Oklab oklab = lmsToOklab(lms);
@@ -69,14 +67,12 @@ namespace oklab
 
     Oklab p3ToOklab(const P3 &p3)
     {
-        double r = gammaToLinear(p3[0] / 255.0);
-        double g = gammaToLinear(p3[1] / 255.0);
-        double b = gammaToLinear(p3[2] / 255.0);
-
-        return linearP3ToOklab({r, g, b});
+        return linearP3ToOklab({gammaToLinear(p3[0] / 255.0),
+                                gammaToLinear(p3[1] / 255.0),
+                                gammaToLinear(p3[2] / 255.0)});
     }
 
-    inline LinearP3 oklabToLinearP3(const Oklab &oklab)
+    LinearP3 oklabToLinearP3(const Oklab &oklab)
     {
         LMS lms = oklabToLms(oklab);
         LinearP3 p3 = multiplyMatrix(LMS_TO_P3, lms);
@@ -118,7 +114,8 @@ namespace oklab
         LinearP3 clippedLinearP3 = clipToGamut(linearP3);
         return linearP3ToP3(clippedLinearP3);
 #else
-        return linearP3ToP3(oklabToLinearP3(oklab));
+        LinearP3 linearP3 = oklabToLinearP3(oklab);
+        return linearP3ToP3(linearP3);
 #endif
     }
 }

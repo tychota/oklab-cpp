@@ -6,23 +6,14 @@
 using namespace oklab;
 
 // Example function to parse RGB input
-RGB parseRGB(const std::string &input)
+template <typename ColorType>
+ColorType parseColor(const std::string &input)
 {
     std::istringstream stream(input);
     int r, g, b;
     char sep;
     stream >> r >> g >> b;
-    return RGB{r, g, b};
-}
-
-// Example function to parse P3 input (similar to RGB for simplicity)
-P3 parseP3(const std::string &input)
-{
-    std::istringstream stream(input);
-    int r, g, b;
-    char sep;
-    stream >> r >> g >> b;
-    return P3{r, g, b};
+    return ColorType{r, g, b};
 }
 
 int main(int argc, char **argv)
@@ -36,7 +27,7 @@ int main(int argc, char **argv)
                              {
         args::ValueFlag<std::string> inputColor(sp, "inputColor", "The input RGB color (format: 'r g b')", {"inputColor"}, args::Options::Required);
         sp.Parse();
-        RGB rgb = parseRGB(args::get(inputColor));
+        RGB rgb = parseColor<RGB>(args::get(inputColor));
         Oklab oklab = rgbToOklab(rgb);
         P3 p3 = oklabToP3(oklab);
         std::cout << "Converted P3: " << p3[0] << ", " << p3[1] << ", " << p3[2] << std::endl; });
@@ -45,7 +36,7 @@ int main(int argc, char **argv)
                              {
         args::ValueFlag<std::string> inputColor(sp, "inputColor", "The input P3 color (format: 'r g b')", {"inputColor"}, args::Options::Required);
         sp.Parse();
-        P3 p3 = parseP3(args::get(inputColor));
+        P3 p3 = parseColor<P3>(args::get(inputColor));
         std::cout << "Parsed P3: " << p3[0] << ", " << p3[1] << ", " << p3[2] << std::endl;
         Oklab oklab = p3ToOklab(p3);
         RGB rgb = oklabToRgb(oklab);

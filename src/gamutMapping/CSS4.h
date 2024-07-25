@@ -36,7 +36,7 @@ namespace oklab
     ColorType performCssGamutMapping(const Oklab &oklab);
 
     template <typename ColorType, typename LinearColorType>
-    inline ColorType performCssGamutMapping(const Oklab &oklab)
+    ColorType performCssGamutMapping(const Oklab &oklab)
     {
         Oklch oklch = oklabToOklch(oklab);
 

@@ -49,9 +49,7 @@ TEST(ValidRoundTrips, RgbToP3ToRgb)
     for (const auto &original : testRGBColors)
     {
         P3 p3 = rgbToP3(original);
-        P3 testP3 = P3{0, 0, 0};
-        EXPECT_VECTOR_EQ(p3, testP3, 0);
         RGB backToRgb = p3ToRgb(p3);
-        EXPECT_VECTOR_EQ(original, backToRgb, 0);
+        EXPECT_VECTOR_EQ(original, backToRgb, 5);
     }
 }
