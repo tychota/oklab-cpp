@@ -16,7 +16,9 @@ I repeat, don't use it in production.
 
 ## Getting Started
 
-### Prerequisites
+### Libraries used
+
+You do not need to install them in advanced.
 
 - [Conan](https://conan.io/) - C/C++ package manager
 - [CMake](https://cmake.org/) - Build system
@@ -26,35 +28,46 @@ I repeat, don't use it in production.
 
 ### Building the Project
 
-1. **Install Poetry:**
+1. **Install Conan:**
 
+   Follow the instructions on the [Conan website](https://conan.io/downloads) to install Conan, then run
+
+   ```bash
+   conan profile detect
+   ```
+
+2. **Install Poetry:**
    Follow the instructions on the [Poetry website](https://python-poetry.org/docs/#installation) to install Poetry.
 
-2. Clone the repository:
+3. **Install Cmake:**
+
+   ```bash
+   brew install cmake
+   ```
+
+4. Clone the repository:
 
    ```bash
    git clone <repository-url>
    cd <repository-directory>
    ```
 
-3. **Install Python Dependencies:**
+5. **Install Python Dependencies:**
 
    ```bash
    poetry install
    ```
 
-4. Create a build directory and install dependencies using Conan:
+6. Install dependencies using Conan:
 
    ```bash
-   mkdir build
-   cd build
-   conan install .. --build=missing
+   conan install . --build=missing
    ```
 
-5. Configure and build the project using CMake:
+7. Configure and build the project using Conan:
+
    ```bash
-   cmake ..
-   make
+   conan build . -s build_type=Release -b all
    ```
 
 ### Running Tests and Benchmarks
@@ -62,12 +75,12 @@ I repeat, don't use it in production.
 - To run the unit tests:
 
   ```bash
-  ./build/Release/oklabTests
+  ./build/Release/tests/oklab_tests
   ```
 
 - To run the benchmarks:
   ```bash
-  ./build/Release/oklabBenchmark
+  ./build/Release/benchmarks/oklab_benchmark
   ```
 
 ## Example Usage
